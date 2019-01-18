@@ -1,14 +1,14 @@
-import QtQuick 2.9
-import QtQuick.Controls 2.2
+import QtQuick 2.12
+import QtQuick.Controls 2.12
 
 import ru.abrmv.xmpparser 1.0
 
 ApplicationWindow {
     id: window
     visible: true
-    width: 640
+    width: 320
     height: 480
-    title: qsTr("Stack")
+    title: qsTr("Techcd.ru")
 
     function sendMessage(userMessage, userName) {
         var http = new XMLHttpRequest()
@@ -32,74 +32,44 @@ ApplicationWindow {
         http.send(params);
     }
 
+    function sendMessageTest() {
+        var resp = "<program_o>
+    <version>2.6.8</version>
+    <status>
+        <success>1</success>
+    </status>
+    <bot_id>2</bot_id>
+    <bot_name>Test2</bot_name>
+    <user_id>1295</user_id>
+    <user_name>Guest</user_name>
+    <chat>
+        <line>
+            <input>Hello</input>
+            <response>Затрудняюсь ответить.</response>
+        </line>
+    </chat>
+</program_o>"
+        xmlparser.setResponse(resp);
+    }
+
     MessageParser {
         id: xmlparser
     }
 
-    header: ToolBar {
-        contentHeight: toolButton.implicitHeight
-
-        ToolButton {
-            id: toolButton
-            text: stackView.depth > 1 ? "\u25C0" : "\u2630"
-            font.pixelSize: Qt.application.font.pixelSize * 1.6
-            onClicked: {
-                if (stackView.depth > 1) {
-                    stackView.pop()
-                } else {
-                    drawer.open()
-                }
-            }
-        }
-
-        Label {
-            text: stackView.currentItem.title
-            anchors.centerIn: parent
-        }
-    }
-
-    Drawer {
-        id: drawer
-        width: window.width * 0.66
-        height: window.height
-
-        Column {
-            anchors.fill: parent
-
-            ItemDelegate {
-                text: qsTr("Page 1")
-                width: parent.width
-                onClicked: {
-                    stackView.push("Page1Form.ui.qml")
-                    //console.log("textEditText = ", textEditText)
-                    stackView.children[1].textEdit.append(textEditText)
-                    drawer.close()
-                }
-            }
-//            ItemDelegate {
-//                text: qsTr("Page 2")
-//                width: parent.width
-//                onClicked: {
-//                    stackView.push("Page2Form.ui.qml")
-//                    drawer.close()
-//                }
-//            }
-        }
-    }
-
     StackView {
         id: stackView
-        initialItem: "HomeForm.ui.qml"
         anchors.fill: parent
+        initialItem: "HomeForm.ui.qml"
     }
+
     Connections {
         target: xmlparser
         onAppendText: {
             window.textEditText += str;
-            if (stackView.children[1])
-                stackView.children[1].textEdit.append(str)
-        }//stackView.children[0].textEdit.append(str)
+            if (stackView.children[1]) {
+                stackView.children[1].textArea.append(str)
+            }
+        }
     }
     property string textEditText: ""
 }
-//  host1.demoproject2f.techcd.ru/chatbot/conversation_start.php?bot_id=2&say=привет&format=xml&Name=stas

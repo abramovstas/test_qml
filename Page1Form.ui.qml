@@ -1,135 +1,78 @@
-import QtQuick 2.9
-import QtQuick.Controls 2.2
+import QtQuick 2.12
+import QtQuick.Layouts 1.12
+import QtQuick.Controls 2.12
 
 Page {
-    id: page1
-    width: 600
-    height: 400
-    property alias scrollView: scrollView
-    property alias textEdit: textEdit
+    id: root
 
-    title: qsTr("Page 1")
+    property alias textArea: textArea
+    width: 320
 
-    Label {
-        text: qsTr("Сообщения чата")
-        anchors.right: parent.right
-        anchors.rightMargin: 90
-        anchors.left: parent.left
-        anchors.leftMargin: 7
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: 385
-        anchors.top: parent.top
-        anchors.topMargin: 2
-    }
+    header: ToolBar {
+        ToolButton {
+            id: toolButton
+            text: qsTr("Back")
+            anchors.left: parent.left
+            anchors.leftMargin: 10
+            anchors.verticalCenter: parent.verticalCenter
+        }
 
-    //Поле ввода/вывода сообщений чата
-
-    //  Надпись введите имя
-    Label {
-        text: qsTr("Enter you message")
-        styleColor: "#db3333"
-        anchors.right: parent.right
-        anchors.rightMargin: 243
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: 188
-        anchors.top: parent.top
-        anchors.topMargin: 191
-        anchors.left: parent.left
-        anchors.leftMargin: 14
-    }
-
-    ScrollView {
-        id: scrollView
-        clip: true
-        anchors.right: parent.right
-        anchors.rightMargin: 15
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: 224
-        anchors.top: parent.top
-        anchors.topMargin: 24
-        anchors.left: parent.left
-        anchors.leftMargin: 13
-
-        Flickable {
-            id: flickable
-            x: 36
-            y: 24
-            width: 300
-            height: 300
-            flickableDirection: Flickable.VerticalFlick
-
-            TextEdit {
-                id: textEdit
-                width: 525
-                color: "#7e797f"
-                text: qsTr("")
-                readOnly: true
-                clip: true
-                anchors.rightMargin: -572
-                anchors.bottomMargin: -137
-                anchors.leftMargin: 0
-                anchors.topMargin: 0
-                anchors.fill: parent
-                font.pixelSize: 12
-            }
+        Label {
+            id: pageTitle
+            text: qsTr("Chat")
+            font.pixelSize: 20
+            anchors.centerIn: parent
         }
     }
 
-    Button {
-        id: button
-        text: qsTr("Отправить сообщение")
-        checkable: true
-        anchors.right: parent.right
-        anchors.rightMargin: 382
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: 105
-        anchors.top: parent.top
-        anchors.topMargin: 255
-        anchors.left: parent.left
-        anchors.leftMargin: 15
-    }
-
-
-    TextInput {
-        id: textinput
-        height: 20
-        color: "#7e797f"
-        text: qsTr("")
-        anchors.right: parent.right
-        anchors.rightMargin: 243
-        anchors.left: parent.left
-        anchors.leftMargin: 15
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: 162
-        anchors.top: parent.top
-        anchors.topMargin: 218
-        font.pixelSize: 12
+    Connections {
+        target: toolButton
+        onClicked: root.StackView.view.pop()
     }
 
     Connections {
-        target: button
-        onClicked: sendMessage(textinput.text, "stas")
+        target: sendButton
+        onClicked: sendMessage(messageField.text, "Guest")//sendMessageTest()
+    }
+
+    ColumnLayout {
+        anchors.fill: parent
+
+        ScrollView {
+            id: listView
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            Layout.margins: pane.leftPadding + messageField.leftPadding
+
+            TextArea {
+                id: textArea
+            }
+        }
+
+        Pane {
+            id: pane
+            Layout.fillWidth: true
+
+            RowLayout {
+                width: parent.width
+
+                TextArea {
+                    id: messageField
+                    Layout.fillWidth: true
+                    placeholderText: qsTr("Compose message")
+                    wrapMode: TextArea.Wrap
+                }
+
+                Button {
+                    id: sendButton
+                    text: qsTr("Send")
+                    enabled: messageField.length > 0
+//                    onClicked: {
+//                        listView.model.sendMessage(inConversationWith, messageField.text);
+//                        messageField.text = "";
+//                    }
+                }
+            }
+        }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*##^## Designer {
-    D{i:2;anchors_width:337}D{i:5;anchors_width:565}
-}
- ##^##*/

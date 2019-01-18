@@ -38,33 +38,41 @@ bool MessageParser::parseDomDocument(const QDomElement &root)
     QDomElement child = root.firstChildElement();
     while (!child.isNull()) {
         if (child.tagName() == QLatin1String("version")) {
-            qDebug() << child.tagName() << " " << child.text();
+            qDebug() << child.tagName()
+                     << " " << child.text();
         } else if (child.tagName() == QLatin1String("status")) {
-            qDebug() << child.tagName() << " " << child.text();
+            qDebug() << child.tagName()
+                     << " " << child.text();
         } else if (child.tagName() == QLatin1String("bot_id")) {
-            qDebug() << child.tagName() << " " << child.text();
+            qDebug() << child.tagName()
+                     << " " << child.text();
         } else if (child.tagName() == QLatin1String("bot_name")) {
             bot_name = child.text();
-            qDebug() << child.tagName() << " " << bot_name;
+            qDebug() << child.tagName()
+                     << " " << bot_name;
         } else if (child.tagName() == QLatin1String("user_id")) {
-            qDebug() << child.tagName() << " " << child.text();
+            qDebug() << child.tagName()
+                     << " " << child.text();
         } else if (child.tagName() == QLatin1String("user_name")) {
             user_name = child.text();
-            qDebug() << child.tagName() << " " << user_name;
+            qDebug() << child.tagName()
+                     << " " << user_name;
         } else if (child.tagName() == QLatin1String("chat")) {
             QDomElement line = child.firstChildElement(QLatin1String("line"));
 
             QDomElement input = line.firstChildElement(QLatin1String("input"));
             user_message = QTextDocumentFragment::fromHtml(input.text()).toPlainText();
-            qDebug() << input.tagName() << " " << user_message;
-
+            qDebug() << input.tagName()
+                     << " " << user_message;
             QDomElement response = line.firstChildElement(QLatin1String("response"));
             bot_message = QTextDocumentFragment::fromHtml(response.text()).toPlainText();
-            qDebug() << response.tagName() << " " << bot_message;
+            qDebug() << response.tagName()
+                     << " " << bot_message;
         }
         child = child.nextSiblingElement();
     }
     m_response.clear();
     m_response = user_name + " : " + user_message + "\n" + bot_name + " : " + bot_message + "\n";
+
     return true;
 }

@@ -1,87 +1,53 @@
-import QtQuick 2.9
-import QtQuick.Controls 2.2
+import QtQuick 2.12
+import QtQuick.Controls 2.12
+import QtQuick.Layouts 1.0
 
 Page {
     id: page
-    width: 600
-    height: 400
     property alias page: page
 
-    title: qsTr("Techcd.ru")
-
-    //  Надпись введите имя
-    Label {
-        width: 337
-        height: 21
-        text: qsTr("Enter you name")
-        anchors.verticalCenterOffset: -40
-        anchors.horizontalCenterOffset: -110
-        anchors.centerIn: parent
-    }
-
-    //  Кнопка
-    Rectangle {
-        id: button
-        x: 21
-        y: 247 //Имя кнопки
-
-        //Размещаем в центре
-        //x: parent.width / 2 - button.width / 2;
-        //y: parent.height / 2 - button.height / 2;
-
-        //Размеры кнопки
-        width: 100
-        height: 30
-
-        //Цвет кнопки
-        color: "gray"
-
-        //Текст кнопки
-        Text {
-            id: buttonLabel
-            text: "Начать чат"
+    header: ToolBar {
+        Label {
+            text: qsTr("Contact")
+            font.pixelSize: 20
             anchors.centerIn: parent
-        }
-
-        MouseArea {
-            id: mouseArea1
-            hoverEnabled: true
-            anchors.fill: parent
-        }
-    }
-
-    //Строка ввода
-    Rectangle {
-        id: textinputRect
-        x: 21
-        y: 202 //Имя строки ввода
-
-        //Размещаем ниже
-        //x: parent.width / 2 - button.width / 2;
-        //y: parent.height / 2 - button.height / 2+40;
-
-        //Размеры строки ввода
-        width: 100
-        height: 18
-
-        //цвет строки ввода
-        color: "gray"
-
-        TextInput {
-            id: textinput
-            objectName: "textinput"
-            color: "#151515"
-            selectionColor: "blue"
-            font.pixelSize: 12
-            width: parent.width - 4
-            anchors.centerIn: parent
-            focus: true
-            text: "stas"
         }
     }
 
     Connections {
-        target: mouseArea1
-        onClicked: sendMessage("Привет", textinput.text)
+        target: sendButton
+        onClicked: {
+            sendMessage("Привет", firstName.text)
+            //sendMessageTest()
+            page.StackView.view.push("qrc:/Page1Form.ui.qml")
+            stackView.children[1].textArea.append(textEditText)
+        }
+    }
+
+    Pane {
+        id: pane
+        Layout.fillWidth: true
+        anchors.centerIn: parent
+
+        ColumnLayout {
+            width: parent.width
+            anchors.centerIn: parent
+
+            TextField {
+                id: firstName
+                Layout.minimumWidth: 140
+                Layout.fillWidth: true
+                Layout.columnSpan: 3
+                placeholderText: qsTr("Введите имя")
+            }
+
+            Button {
+                id: sendButton
+                width: 200
+                text: qsTr("Начать чат")
+                Layout.fillWidth: true
+                enabled: firstName.length > 0
+            }
+        }
     }
 }
